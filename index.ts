@@ -150,6 +150,9 @@ class CLI {
   }
 
   private async streamResponse(): Promise<void> {
+    // Pause readline to prevent user input during streaming
+    this.rl.pause();
+    
     process.stdout.write(`\n${colors.green}AI: ${colors.reset}`);
     let fullResponse = "";
 
@@ -162,6 +165,9 @@ class CLI {
       this.history.addMessage("assistant", fullResponse);
     } catch (error) {
       console.error(`\n${colors.red}Error: ${error instanceof Error ? error.message : String(error)}${colors.reset}`);
+    } finally {
+      // Resume readline after streaming completes
+      this.rl.resume();
     }
   }
 
